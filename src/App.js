@@ -93,14 +93,6 @@ function App() {
         <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
       {message && <p>{message}</p>}
-      <ul>
-        {letters.map((letter) => (
-          <li key={letter.id}>
-            <strong>{letter.content}</strong><br />
-            緯度: {letter.latitude}, 経度: {letter.longitude}
-          </li>
-        ))}
-      </ul>
       <MapContainer
   center={[35.6895, 139.6917]} // 初期表示位置（東京）
   zoom={13}

@@ -63,6 +63,17 @@ function App() {
   }
 };
 
+  const [deletePassword, setDeletePassword] = useState('');
+
+  const deleteLetter = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/delete_letter/?letter_id=${id}&password=${deletePassword}`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+    alert(data.message);
+    getLetters(); // 更新
+  };
+
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -87,12 +98,27 @@ function App() {
         value={longitude}
         onChange={(e) => setLongitude(e.target.value)}
       />
+      <input
+        type="password"
+        placeholder="開発者パスワード"
+        value={deletePassword}
+        onChange={(e) => setDeletePassword(e.target.value)}
+        style={{ marginTop: '1rem' }}
+      />
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
         <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>
         <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
       {message && <p>{message}</p>}
+      <ul>
+        {letters.map((letter) => (
+          <li key={letter.id}>
+            <button onClick={() => deleteLetter(letter.id)}>削除</button>
+          </li>
+        ))}
+      </ul>
+
       <MapContainer
   center={[35.6895, 139.6917]} // 初期表示位置（東京）
   zoom={13}

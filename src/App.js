@@ -105,12 +105,6 @@ function App() {
         onChange={(e) => setDeletePassword(e.target.value)}
         style={{ marginTop: '1rem' }}
       />
-      <div style={{ marginTop: '1rem' }}>
-        <button onClick={postLetter}>手紙を残す</button>
-        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>
-        <button onClick={getCurrentLocation}>現在地を取得</button>
-      </div>
-      {message && <p>{message}</p>}
       <ul>
         {letters.map((letter) => (
           <li key={letter.id}>
@@ -118,7 +112,12 @@ function App() {
           </li>
         ))}
       </ul>
-
+      <div style={{ marginTop: '1rem' }}>
+        <button onClick={postLetter}>手紙を残す</button>
+        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>
+        <button onClick={getCurrentLocation}>現在地を取得</button>
+      </div>
+      {message && <p>{message}</p>}
       <MapContainer
   center={[35.6895, 139.6917]} // 初期表示位置（東京）
   zoom={13}

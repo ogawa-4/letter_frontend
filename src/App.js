@@ -66,6 +66,8 @@ function App() {
 };
 
   const [deletePassword, setDeletePassword] = useState('');
+  const [showDeleteUI, setShowDeleteUI] = useState(false);
+
 
   const deleteLetter = async (id) => {
     const response = await fetch(`${API_BASE_URL}/delete_letter/?letter_id=${id}&password=${deletePassword}`, {

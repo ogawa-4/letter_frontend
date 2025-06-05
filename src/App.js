@@ -18,6 +18,27 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+const [currentPosition, setCurrentPosition] = useState(null); // ←現在地のマーカー用
+
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        setLatitude(lat.toString());
+        setLongitude(lon.toString());
+        setCurrentPosition([lat, lon]); // ← ここで現在地を保存
+      },
+      (error) => {
+        console.error("位置情報の取得に失敗:", error);
+        setMessage("位置情報の取得に失敗");
+      }
+    );
+  } else {
+    setMessage("このブラウザは位置情報に対応していません");
+  }
+};
 
 function App() {
   const [content, setContent] = useState(''); //手紙の内容
@@ -63,7 +84,6 @@ function App() {
     setMessage("このブラウザは位置情報に対応していません");
   }
 };
-
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -111,6 +131,12 @@ function App() {
       <Popup>{letter.content}</Popup>
     </Marker>
   ))}
+
+  {currentPosition && (
+    <Marker position={currentPosition}>
+      <Popup>あなたの現在地</Popup>
+    </Marker>
+  )}
 </MapContainer>
 
     </div>

@@ -25,8 +25,6 @@ function App() {
   const [message, setMessage] = useState(''); //サーバから帰ってきたメッセージ
   const [letters, setLetters] = useState([]); //手紙の一覧
 
-  const CORRECT_PASSWORD = 'null';
-
   //手紙送信の関数
   //fetchを用いて、POSTリクエストを送信、レスポンスをmessageに格納
   const postLetter = async () => {
@@ -65,19 +63,6 @@ function App() {
   }
 };
 
-  const [deletePassword, setDeletePassword] = useState('');
-  const [showDeleteUI, setShowDeleteUI] = useState(false);
-
-
-  const deleteLetter = async (id) => {
-    const response = await fetch(`${API_BASE_URL}/delete_letter/?letter_id=${id}&password=${deletePassword}`, {
-      method: 'DELETE',
-    });
-    const data = await response.json();
-    alert(data.message);
-    getLetters(); // 更新
-  };
-
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -102,47 +87,6 @@ function App() {
         value={longitude}
         onChange={(e) => setLongitude(e.target.value)}
       />
-      <input
-        type="password"
-        placeholder="開発者パスワード"
-        value={deletePassword}
-        onChange={(e) => setDeletePassword(e.target.value)}
-        style={{ marginTop: '1rem' }}
-      />
-
-      <button
-        onClick={() => setShowDeleteUI(!showDeleteUI)}
-        style={{ marginTop: '1rem', backgroundColor: showDeleteUI ? '#ddd' : '' }}
-      >
-        {showDeleteUI ? '削除モード終了' : '削除モードに切り替え'}
-      </button>
-
-      //削除用
-      {showDeleteUI && (
-        <div style={{ marginTop: '1rem', border: '1px solid #ccc', padding: '1rem' }}>
-          <input
-            type="password"
-            placeholder="開発者パスワード"
-            value={deletePassword}
-            onChange={(e) => setDeletePassword(e.target.value)}
-            style={{ marginBottom: '1rem', display: 'block' }}
-          />
-          <ul>
-            {letters.map((letter) => (
-              <li key={letter.id}>
-                ID: {letter.id}
-                <button
-                  onClick={() => deleteLetter(letter.id)}
-                  style={{ marginLeft: '1rem', color: 'red' }}
-                >
-                  削除
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
         <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>

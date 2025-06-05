@@ -105,13 +105,16 @@ function App() {
         onChange={(e) => setDeletePassword(e.target.value)}
         style={{ marginTop: '1rem' }}
       />
-      <ul>
-        {letters.map((letter) => (
-          <li key={letter.id}>
-            <button onClick={() => deleteLetter(letter.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
+      {deletePassword === CORRECT_PASSWORD && (
+        <ul>
+          {letters.map((letter) => (
+            <li key={letter.id}>
+              ID: {letter.id}
+              <button onClick={() => deleteLetter(letter.id)} style={{ marginLeft: '1rem' }}>削除</button>
+            </li>
+          ))}
+        </ul>
+      )}
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
         <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>

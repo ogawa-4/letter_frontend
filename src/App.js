@@ -2,6 +2,7 @@
 //Reactを用いて、入力内容をFastAPIにPOSTし、保存された手紙をすべてGETして表示する 
 
 import React, { useState } from 'react';
+import './App.css'; // ← ここでCSS読み込み！
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';

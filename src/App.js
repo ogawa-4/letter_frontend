@@ -25,6 +25,10 @@ function App() {
   const [message, setMessage] = useState(''); //サーバから帰ってきたメッセージ
   const [letters, setLetters] = useState([]); //手紙の一覧
 
+  const [deletePassword, setDeletePassword] = useState('');
+  const [showDeleteUI, setShowDeleteUI] = useState(false);
+
+
   //手紙送信の関数
   //fetchを用いて、POSTリクエストを送信、レスポンスをmessageに格納
   const postLetter = async () => {
@@ -47,21 +51,32 @@ function App() {
   //現在位置を取得して、自動で緯度経度を入力する関数
   //Geolocation APIを使用して、現在地の緯度経度を取得
   const getCurrentLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude.toString());
-        setLongitude(position.coords.longitude.toString());
-      },
-      (error) => {
-        console.error("位置情報の取得に失敗:", error);
-        setMessage("位置情報の取得に失敗");
-      }
-    );
-  } else {
-    setMessage("このブラウザは位置情報に対応していません");
-  }
-};
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude.toString());
+          setLongitude(position.coords.longitude.toString());
+        },
+        (error) => {
+          console.error("位置情報の取得に失敗:", error);
+          setMessage("位置情報の取得に失敗");
+        }
+      );
+    } else {
+      setMessage("このブラウザは位置情報に対応していません");
+    }
+  };
+
+  const deleteLetter = async (id) => {
+    const response = await fetch(`${API_BASE_URL}/delete_letter/?letter_id=${id}&password=${deletePassword}`, {
+      method: 'DELETE',
+    });
+  
+    const data = await response.json();
+    alert(data.message);
+    getLetters(); // 手紙一覧を更新
+  };
+
 
 
   return (
@@ -87,6 +102,40 @@ function App() {
         value={longitude}
         onChange={(e) => setLongitude(e.target.value)}
       />
+
+      <button
+        onClick={() => setShowDeleteUI(!showDeleteUI)}
+        style={{ marginTop: '1rem', backgroundColor: showDeleteUI ? '#eee' : '' }}
+      >
+        {showDeleteUI ? '削除モード終了' : '削除モードに切り替え'}
+      </button>
+      
+      {showDeleteUI && (
+        <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid #ccc' }}>
+          <input
+            type="password"
+            placeholder="開発者パスワード"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            style={{ marginBottom: '1rem', display: 'block' }}
+          />
+          <ul>
+            {letters.map((letter) => (
+              <li key={letter.id}>
+                ID: {letter.id} | {letter.content}
+                <button
+                  onClick={() => deleteLetter(letter.id)}
+                  style={{ marginLeft: '1rem', color: 'red' }}
+                >
+                  削除
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+          
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
         <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>

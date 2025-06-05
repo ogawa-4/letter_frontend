@@ -107,21 +107,39 @@ function App() {
         onChange={(e) => setDeletePassword(e.target.value)}
         style={{ marginTop: '1rem' }}
       />
-        
-      <ul>
-        {letters.map((letter) => (
-          <li key={letter.id}>
-            ID: {letter.id}
-            <button onClick={() => {
-              if (deletePassword === '') {
-                alert('開発者パスワードを入力してから削除してください');
-                return;
-              }
-              deleteLetter(letter.id);
-            }} style={{ marginLeft: '1rem' }}>削除</button>
-          </li>
-        ))}
-      </ul>
+
+      <button
+        onClick={() => setShowDeleteUI(!showDeleteUI)}
+        style={{ marginTop: '1rem', backgroundColor: showDeleteUI ? '#ddd' : '' }}
+      >
+        {showDeleteUI ? '削除モード終了' : '削除モードに切り替え'}
+      </button>
+
+      //削除用
+      {showDeleteUI && (
+        <div style={{ marginTop: '1rem', border: '1px solid #ccc', padding: '1rem' }}>
+          <input
+            type="password"
+            placeholder="開発者パスワード"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+            style={{ marginBottom: '1rem', display: 'block' }}
+          />
+          <ul>
+            {letters.map((letter) => (
+              <li key={letter.id}>
+                ID: {letter.id}
+                <button
+                  onClick={() => deleteLetter(letter.id)}
+                  style={{ marginLeft: '1rem', color: 'red' }}
+                >
+                  削除
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>

@@ -18,34 +18,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const [currentPosition, setCurrentPosition] = useState(null); // ←現在地のマーカー用
-
-const getCurrentLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        setLatitude(lat.toString());
-        setLongitude(lon.toString());
-        setCurrentPosition([lat, lon]); // ← ここで現在地を保存
-      },
-      (error) => {
-        console.error("位置情報の取得に失敗:", error);
-        setMessage("位置情報の取得に失敗");
-      }
-    );
-  } else {
-    setMessage("このブラウザは位置情報に対応していません");
-  }
-};
-
 function App() {
   const [content, setContent] = useState(''); //手紙の内容
   const [latitude, setLatitude] = useState(''); //緯度（入力は文字列として受け取る）
   const [longitude, setLongitude] = useState(''); //経度
   const [message, setMessage] = useState(''); //サーバから帰ってきたメッセージ
   const [letters, setLetters] = useState([]); //手紙の一覧
+  const [currentPosition, setCurrentPosition] = useState(null); // ←現在地のマーカー用
 
   //手紙送信の関数
   //fetchを用いて、POSTリクエストを送信、レスポンスをmessageに格納
@@ -67,13 +46,16 @@ function App() {
   };
 
   //現在位置を取得して、自動で緯度経度を入力する関数
-  //Geolocation APIを使用して、現在地の緯度経度を取得
-  const getCurrentLocation = () => {
+  //Geolocation APIを使用して、現在地の緯度経度を取得+mapにマーカーを表示
+const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setLatitude(position.coords.latitude.toString());
-        setLongitude(position.coords.longitude.toString());
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        setLatitude(lat.toString());
+        setLongitude(lon.toString());
+        setCurrentPosition([lat, lon]); // ← ここで現在地を保存
       },
       (error) => {
         console.error("位置情報の取得に失敗:", error);
@@ -84,6 +66,7 @@ function App() {
     setMessage("このブラウザは位置情報に対応していません");
   }
 };
+
 
   return (
     <div style={{ padding: '2rem' }}>

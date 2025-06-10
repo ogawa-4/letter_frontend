@@ -93,7 +93,7 @@ const getCurrentLocation = () => {
       />
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
-        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>すべての手紙を表示</button>
+        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>Map更新</button>
         <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
       {message && <p>{message}</p>}

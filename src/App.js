@@ -6,6 +6,8 @@ import './App.css'; // ← ここでCSS読み込み！
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import MapView from './components/MapView';
+
 
 const API_BASE_URL = 'https://letter-backend-eqrq.onrender.com';
 
@@ -97,31 +99,7 @@ const getCurrentLocation = () => {
         <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
       {message && <p>{message}</p>}
-      <MapContainer
-  center={[35.6895, 139.6917]} // 初期表示位置（東京）
-  zoom={13}
-  style={{ height: '400px', width: '100%', marginTop: '2rem' }}
->
-  <TileLayer
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
-  />
-  {letters.map((letter) => (
-    <Marker
-      key={letter.id}
-      position={[letter.latitude, letter.longitude]}
-    >
-      <Popup>{letter.content}</Popup>
-    </Marker>
-  ))}
-
-  {currentPosition && (
-    <Marker position={currentPosition}>
-      <Popup>あなたの現在地</Popup>
-    </Marker>
-  )}
-</MapContainer>
-
+      <MapView letters={letters} currentPosition={currentPosition} />
     </div>
   );
 }

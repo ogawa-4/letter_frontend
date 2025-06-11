@@ -7,6 +7,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import MapView from './components/MapView';
+import Message from './components/Message';
+import LetterForm from './components/LetterForm';
+import Header from './Header';
+
 
 
 const API_BASE_URL = 'https://letter-backend-eqrq.onrender.com';
@@ -69,36 +73,21 @@ const getCurrentLocation = () => {
   }
 };
 
-
   return (
     <div style={{ padding: '2rem' }}>
-      <h1>置き手紙システム</h1>
-      <textarea
-        placeholder="内容を入力"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        rows={3}
-        style={{ width: '100%' }}
+      <Header />
+      <LetterForm
+        content={content}
+        latitude={latitude}
+        longitude={longitude}
+        setContent={setContent}
+        setLatitude={setLatitude}
+        setLongitude={setLongitude}
+        postLetter={postLetter}
+        getLetters={getLetters}
+        getCurrentLocation={getCurrentLocation}
       />
-      <input
-        type="text"
-        placeholder="緯度"
-        value={latitude}
-        onChange={(e) => setLatitude(e.target.value)}
-        style={{ marginRight: '1rem' }}
-      />
-      <input
-        type="text"
-        placeholder="経度"
-        value={longitude}
-        onChange={(e) => setLongitude(e.target.value)}
-      />
-      <div style={{ marginTop: '1rem' }}>
-        <button onClick={postLetter}>手紙を残す</button>
-        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>Map更新</button>
-        <button onClick={getCurrentLocation}>現在地を取得</button>
-      </div>
-      {message && <p>{message}</p>}
+      <Message message={message} />
       <MapView letters={letters} currentPosition={currentPosition} />
     </div>
   );

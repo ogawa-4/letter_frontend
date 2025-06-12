@@ -39,25 +39,10 @@ function App() {
     setMessage(result.message);
   };
 
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          setLatitude(lat.toString());
-          setLongitude(lon.toString());
-          setCurrentPosition([lat, lon]); // ← ここで現在地を保存
-        },
-        (error) => {
-          console.error("位置情報の取得に失敗:", error);
-          setMessage("位置情報の取得に失敗");
-        }
-      );
-    } else {
-      setMessage("このブラウザは位置情報に対応していません");
-    }
+  const handleGetCurrentLocation = () => {
+    getCurrentLocation(setLatitude, setLongitude, setCurrentPosition, setMessage);
   };
+
 
   // 手紙一覧取得
   const handleGetLetters = async () => {
@@ -77,7 +62,7 @@ function App() {
         setLongitude={setLongitude}
         postLetter={handlePostLetter}
         getLetters={handleGetLetters}
-        getCurrentLocation={getCurrentLocation}
+        getCurrentLocation={handleGetCurrentLocation}
       />
       <Message message={message} />
       <MapView letters={letters} currentPosition={currentPosition} />

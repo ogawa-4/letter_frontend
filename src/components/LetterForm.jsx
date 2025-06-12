@@ -35,11 +35,14 @@ function LetterForm({
       />
       <div style={{ marginTop: '1rem' }}>
         <button onClick={postLetter}>手紙を残す</button>
-        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>Map更新</button>
+        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>
+          Map更新
+        </button>
         <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
     </div>
   );
 }
+
 
 export default LetterForm;

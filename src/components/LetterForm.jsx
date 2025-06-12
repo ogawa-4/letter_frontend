@@ -7,9 +7,9 @@ function LetterForm({
   setContent,
   setLatitude,
   setLongitude,
-  onPostLetter,
-  onGetLetters,
-  onGetCurrentLocation,
+  postLetter,
+  getLetters,
+  getCurrentLocation,
 }) {
   return (
     <div>
@@ -34,11 +34,11 @@ function LetterForm({
         onChange={(e) => setLongitude(e.target.value)}
       />
       <div style={{ marginTop: '1rem' }}>
-        <button onClick={onPostLetter}>手紙を残す</button>
-        <button onClick={onGetLetters} style={{ marginLeft: '1rem' }}>
+        <button onClick={postLetter}>手紙を残す</button>
+        <button onClick={getLetters} style={{ marginLeft: '1rem' }}>
           Map更新
         </button>
-        <button onClick={onGetCurrentLocation}>現在地を取得</button>
+        <button onClick={getCurrentLocation}>現在地を取得</button>
       </div>
     </div>
   );

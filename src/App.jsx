@@ -9,7 +9,6 @@ import L from 'leaflet';
 import MapView from './components/MapView';
 import Message from './components/Message';
 import LetterForm from './components/LetterForm';
-import Header from './Header';
 import Header from './components/Header';
 
 

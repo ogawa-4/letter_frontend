@@ -9,10 +9,9 @@ import L from 'leaflet';
 import MapView from './components/MapView';
 import Message from './components/Message';
 import LetterForm from './components/LetterForm';
+import Header from './Header';
 import Header from './components/Header';
-import { getCurrentLocation } from './utils/getCurrentLocation';
-import { postLetter } from './utils/postLetter';
-import { getLetters } from './utils/getLetters';
+
 
 
 const API_BASE_URL = 'https://letter-backend-eqrq.onrender.com';
@@ -34,21 +33,46 @@ function App() {
   const [letters, setLetters] = useState([]); //手紙の一覧
   const [currentPosition, setCurrentPosition] = useState(null); // ←現在地のマーカー用
 
-  const handlePostLetter = async () => {
-    const result = await postLetter(content, latitude, longitude);
-    setMessage(result.message);
+  //手紙送信の関数
+  //fetchを用いて、POSTリクエストを送信、レスポンスをmessageに格納
+  const postLetter = async () => {
+    const response = await fetch(`${API_BASE_URL}/letters/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content, latitude: parseFloat(latitude), longitude: parseFloat(longitude) }),
+    });
+    const data = await response.json();
+    setMessage(data.message);
   };
 
-  const handleGetCurrentLocation = () => {
-    getCurrentLocation(setLatitude, setLongitude, setCurrentPosition, setMessage);
-  };
-
-
-  // 手紙一覧取得
-  const handleGetLetters = async () => {
-    const data = await getLetters();
+  //すべての手紙取得の関数
+  const getLetters = async () => {
+    const response = await fetch(`${API_BASE_URL}/letters/`);
+    const data = await response.json();
     setLetters(data.letters);
   };
+
+  //現在位置を取得して、自動で緯度経度を入力する関数
+  //Geolocation APIを使用して、現在地の緯度経度を取得+mapにマーカーを表示
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        setLatitude(lat.toString());
+        setLongitude(lon.toString());
+        setCurrentPosition([lat, lon]); // ← ここで現在地を保存
+      },
+      (error) => {
+        console.error("位置情報の取得に失敗:", error);
+        setMessage("位置情報の取得に失敗");
+      }
+    );
+  } else {
+    setMessage("このブラウザは位置情報に対応していません");
+  }
+};
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -60,9 +84,9 @@ function App() {
         setContent={setContent}
         setLatitude={setLatitude}
         setLongitude={setLongitude}
-        postLetter={handlePostLetter}
-        getLetters={handleGetLetters}
-        getCurrentLocation={handleGetCurrentLocation}
+        postLetter={postLetter}
+        getLetters={getLetters}
+        getCurrentLocation={getCurrentLocation}
       />
       <Message message={message} />
       <MapView letters={letters} currentPosition={currentPosition} />

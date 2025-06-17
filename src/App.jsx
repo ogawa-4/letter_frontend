@@ -81,7 +81,7 @@ function App() {
     }
 
     const response = await fetch(
-      `${API_BASE_URL}/nearby_letters/?latitude=${latitude}&longitude=${longitude}&max_distance=100`
+      `${API_BASE_URL}/nearby_letters/?latitude=${latitude}&longitude=${longitude}&max_distance=1000`
     );
     const data = await response.json();
 
@@ -89,7 +89,7 @@ function App() {
       let displayContent = "";
       if (letter.distance <= 15) {
         displayContent = letter.content; // 近距離 → 内容表示
-      } else if (letter.distance <= 100) {
+      } else if (letter.distance <= 1000) {
         displayContent = "(ここに誰かの手紙がある…近づいてみよう)"; // 中距離 → 内容非表示だが何か表示
       }
       return {

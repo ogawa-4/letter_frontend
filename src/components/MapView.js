@@ -15,7 +15,11 @@ function MapView({ letters, currentPosition }) {
       />
       {letters.map((letter) => (
         <Marker key={letter.id} position={[letter.latitude, letter.longitude]}>
-          <Popup>{letter.content}</Popup>
+          <Popup>
+            {letter.content
+              ? letter.content
+              : "この手紙を読むには、もっと近くまで歩いてこなきゃね。"}
+          </Popup>
         </Marker>
       ))}
       {currentPosition && (

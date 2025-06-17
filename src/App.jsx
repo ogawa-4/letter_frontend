@@ -73,6 +73,27 @@ const getCurrentLocation = () => {
   }
 };
 
+const getNearbyLetters = async () => {
+  if (!latitude || !longitude) {
+    setMessage("現在地が取得されていません");
+    return;
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/nearby_letters/?latitude=${latitude}&longitude=${longitude}&max_distance=100`
+  );
+  const data = await response.json();
+
+  // 中身を加工：距離でフィルタ
+  const processedLetters = data.map((letter) => ({
+    ...letter,
+    content: letter.distance <= 15 ? letter.content : "", // 15m以内だけ内容表示
+  }));
+
+  setLetters(processedLetters);
+};
+
+
   return (
     <div style={{ padding: '2rem' }}>
       <Header />
@@ -86,6 +107,7 @@ const getCurrentLocation = () => {
         postLetter={postLetter}
         getLetters={getLetters}
         getCurrentLocation={getCurrentLocation}
+        getNearbyLetters={getNearbyLetters}
       />
       <Message message={message} />
       <MapView letters={letters} currentPosition={currentPosition} />

@@ -53,46 +53,54 @@ function App() {
 
   //現在位置を取得して、自動で緯度経度を入力する関数
   //Geolocation APIを使用して、現在地の緯度経度を取得+mapにマーカーを表示
-const getCurrentLocation = () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        setLatitude(lat.toString());
-        setLongitude(lon.toString());
-        setCurrentPosition([lat, lon]); // ← ここで現在地を保存
-      },
-      (error) => {
-        console.error("位置情報の取得に失敗:", error);
-        setMessage("位置情報の取得に失敗");
-      }
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          setLatitude(lat.toString());
+          setLongitude(lon.toString());
+          setCurrentPosition([lat, lon]); // ← ここで現在地を保存
+        },
+        (error) => {
+          console.error("位置情報の取得に失敗:", error);
+          setMessage("位置情報の取得に失敗");
+        }
+      );
+    } else {
+      setMessage("このブラウザは位置情報に対応していません");
+    }
+  };
+
+  // 距離に応じた手紙の取得
+  const getNearbyLetters = async () => {
+    if (!latitude || !longitude) {
+      setMessage("現在地が取得されていません");
+      return;
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/nearby_letters/?latitude=${latitude}&longitude=${longitude}&max_distance=100`
     );
-  } else {
-    setMessage("このブラウザは位置情報に対応していません");
-  }
-};
+    const data = await response.json();
 
- // 距離に応じた手紙の取得
-const getNearbyLetters = async () => {
-  if (!latitude || !longitude) {
-    setMessage("現在地が取得されていません");
-    return;
-  }
+    const processedLetters = (data.letters || []).map((letter) => {
+      let displayContent = "";
+      if (letter.distance <= 15) {
+        displayContent = letter.content; // 近距離 → 内容表示
+      } else if (letter.distance <= 100) {
+        displayContent = "(ここに誰かの手紙がある…近づいてみよう)"; // 中距離 → 内容非表示だが何か表示
+      }
+      return {
+        ...letter,
+        content: displayContent,
+      };
+    });
 
-  const response = await fetch(
-    `${API_BASE_URL}/nearby_letters/?latitude=${latitude}&longitude=${longitude}&max_distance=100`
-  );
-  const data = await response.json();
+    setLetters(processedLetters);
+  };
 
-  // 中身を加工：距離でフィルタ
-  const processedLetters = (data.letters || []).map((letter) => ({
-    ...letter,
-    content: letter.distance <= 15 ? letter.content : "",
-  }));
-
-  setLetters(processedLetters);
-};
 
 
   return (

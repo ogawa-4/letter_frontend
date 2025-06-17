@@ -73,6 +73,7 @@ const getCurrentLocation = () => {
   }
 };
 
+ // 距離に応じた手紙の取得
 const getNearbyLetters = async () => {
   if (!latitude || !longitude) {
     setMessage("現在地が取得されていません");
@@ -85,9 +86,9 @@ const getNearbyLetters = async () => {
   const data = await response.json();
 
   // 中身を加工：距離でフィルタ
-  const processedLetters = data.map((letter) => ({
+  const processedLetters = (data.letters || []).map((letter) => ({
     ...letter,
-    content: letter.distance <= 15 ? letter.content : "", // 15m以内だけ内容表示
+    content: letter.distance <= 15 ? letter.content : "",
   }));
 
   setLetters(processedLetters);

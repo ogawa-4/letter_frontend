@@ -10,7 +10,7 @@ function LetterForm({
   postLetter,
   getLetters,
   getCurrentLocation,
-  onGetNearbyLetters,
+  GetNearbyLetters,
 }) {
   return (
     <div>
@@ -40,7 +40,7 @@ function LetterForm({
           Map更新
         </button>
         <button onClick={getCurrentLocation}>現在地を取得</button>
-        <button onClick={onGetNearbyLetters}>近くの手紙を取得</button>
+        <button onClick={GetNearbyLetters}>近くの手紙を取得</button>
       </div>
     </div>
   );

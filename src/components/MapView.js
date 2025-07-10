@@ -31,7 +31,7 @@ function MapView({ letters, currentPosition }) {
           (letter) =>
             letter.distance != null &&
             letter.distance > 15 &&
-            letter.distance <= 50
+            letter.distance <= 1000
         )
         .map((letter) => (
           <Marker

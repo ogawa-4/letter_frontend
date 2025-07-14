@@ -89,7 +89,7 @@ function App() {
       let displayContent = "";
       if (letter.distance <= 15) {
         displayContent = letter.content; // 近距離 → 内容表示
-      } else if (letter.distance <= 1000) {
+      } else if (letter.distance <= 50) {
         displayContent = "(ここに誰かの手紙がある…近づいてみよう)"; // 中距離 → 内容非表示だが何か表示
       }
       return {
